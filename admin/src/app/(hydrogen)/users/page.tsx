@@ -72,7 +72,8 @@ export default function ProductsPage() {
     };
   });
 
-  const findUser = () => {
+  const findUser = (e: any) => {
+    e.preventDefault();
     setLoading(true);
     axios
       .get(`${BaseApi}${findUsers}?term=${term}&isDeleted=false`, {
@@ -327,24 +328,26 @@ const Header = ({ downlaoadablelist, term, setTerm, findUser, loading }: any) =>
         >
           More Options <FiMoreHorizontal className="ml-1 mt-0" />
         </Button>
-        <Input
-          prefix={<CiSearch className="h-auto w-full" />}
-          type="text"
-          value={term}
-          onChange={(e) => {
-            setTerm(e.target?.value);
-          }}
-          placeholder="Search for Seller..."
-          className="mt-4 flex-grow lg:mt-0 lg:w-auto"
-        />
-        <Button
-          isLoading={loading}
-          disabled={!term}
-          onClick={() => findUser()}
-          className="mt-4 w-full lg:w-auto lg:mt-0"
-        >
-          Search
-        </Button>
+        <form onSubmit={findUser} className="flex items-center gap-3 w-full">
+          <Input
+            prefix={<CiSearch className="h-auto w-full" />}
+            type="text"
+            value={term}
+            onChange={(e) => {
+              setTerm(e.target?.value);
+            }}
+            placeholder="Search for Seller..."
+            className="mt-4 flex-grow lg:mt-0 lg:w-auto"
+          />
+          <Button
+            isLoading={loading}
+            disabled={!term}
+            type='submit'
+            className="mt-4 w-full lg:w-auto lg:mt-0"
+          >
+            Search
+          </Button>
+        </form>
       </div>
     </header>
   );

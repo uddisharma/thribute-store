@@ -73,7 +73,8 @@ const Page = () => {
     };
   });
 
-  const findSeller = () => {
+  const findSeller = (e: any) => {
+    e.preventDefault()
     setLoading(true);
     axios
       .get(`${BaseApi}${findSingleSeller}?term=${term}`, {
@@ -246,7 +247,7 @@ function LoadingCard({ className }: { className?: string }) {
   );
 }
 
-const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any) => {
+const Header = ({ downlaoadablelist, term, setTerm, findSeller, loading }: any) => {
   const { openModal } = useModal();
 
   const handleMoreOptionsClick = () => {
@@ -257,7 +258,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer "
             >
               <FiUserPlus className="me-1 h-4 w-4" />
               Onboard New
@@ -267,7 +268,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer "
             >
               <MdOutlinePendingActions className="me-1 h-4 w-4" />
               Onboarding Pending
@@ -277,7 +278,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer "
             >
               <MdOutlineAutoDelete className="me-1 h-4 w-4" />
               Deleted
@@ -303,7 +304,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto "
             >
               <FiUserPlus className="me-1 h-4 w-4" />
               Onboard New
@@ -313,7 +314,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto "
             >
               <MdOutlinePendingActions className="me-1 h-4 w-4" />
               Onboarding Pending
@@ -323,7 +324,7 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
             <Button
               tag="span"
               variant="outline"
-              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+              className="mt-4 w-full cursor-pointer lg:mt-0 lg:w-auto "
             >
               <MdOutlineAutoDelete className="me-1 h-4 w-4" />
               Deleted
@@ -344,25 +345,26 @@ const Header = ({  downlaoadablelist, term, setTerm, findSeller, loading }: any)
         >
           More Options <FiMoreHorizontal className="ml-1 mt-0" />
         </Button>
-        <Input
-          prefix={<CiSearch className="h-auto w-full" />}
-          type="text"
-          value={term}
-          onChange={(e) => {
-            setTerm(e.target?.value);
-          }}
-          placeholder="Search for Seller..."
-          className="mt-4 flex-grow lg:mt-0 lg:w-auto"
-        />
-        <Button
-          isLoading={loading}
-          disabled={!term}
-          onClick={() => findSeller()}
-          className="mt-4 w-full lg:w-auto lg:mt-0"
-        >
-          Search
-        </Button>
-
+        <form className='lg:flex items-center w-full lg:gap-3' onSubmit={findSeller}>
+          <Input
+            prefix={<CiSearch className="h-auto w-full" />}
+            type="text"
+            value={term}
+            onChange={(e) => {
+              setTerm(e.target?.value);
+            }}
+            placeholder="Search for Seller..."
+            className="mt-4 flex-grow lg:mt-0 lg:w-auto"
+          />
+          <Button
+            isLoading={loading}
+            disabled={!term}
+            type="submit"
+            className="mt-4 w-full lg:w-auto lg:mt-0"
+          >
+            Search
+          </Button>
+        </form>
       </div>
     </header>
   );

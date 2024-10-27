@@ -193,7 +193,6 @@ function PromoBanner() {
 
   return (
     <>
-      <br />
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
 
       <div
@@ -222,7 +221,7 @@ function PromoBanner() {
           <div className="mt-4 flex flex-col items-center gap-3 @lg:mt-0 lg:flex-row">
             <Button
               variant="outline"
-              className="w-full sm:w-auto lg:w-auto dark:bg-gray-100 dark:text-white"
+              className="w-full sm:w-auto lg:w-auto "
               onClick={comprehensive}
               disabled={error}
               isLoading={loading1}
@@ -237,7 +236,7 @@ function PromoBanner() {
                 onClick={() =>
                   exportToExcel(d_data1, `${params?.date}-comprehensive`)
                 }
-                className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white"
+                className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto "
               >
                 <PiArrowLineUpBold className="me-1.5 h-[17px] w-[17px]" />
                 Export
@@ -271,7 +270,7 @@ function PromoBanner() {
           <div className="mt-4 flex flex-col items-center gap-3 @lg:mt-0 lg:flex-row">
             <Button
               variant="outline"
-              className="w-full sm:w-auto lg:w-auto dark:bg-gray-100 dark:text-white"
+              className="w-full sm:w-auto lg:w-auto "
               onClick={orderlist}
               disabled={error}
               isLoading={loading2}
@@ -284,7 +283,7 @@ function PromoBanner() {
                 disabled={d_data2?.length <= 0}
                 variant="outline"
                 onClick={() => exportToExcel(d_data2, `${params?.date}-orders`)}
-                className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white"
+                className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto "
               >
                 <PiArrowLineUpBold className="me-1.5 h-[17px] w-[17px]" />
                 Export

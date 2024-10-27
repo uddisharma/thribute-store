@@ -158,7 +158,8 @@ export default function SellerDashboard() {
               });
             }}
               tag="span"
-              className="h-[38px] shadow md:h-10 dark:bg-gray-100 dark:text-gray-900 cursor-pointer"
+              className="h-[38px] shadow md:h-10"
+              variant="outline"
             >
               <PiPlusBold className="me-1 h-4 w-4" /> View Options
             </Button>

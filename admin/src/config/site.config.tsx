@@ -11,8 +11,8 @@ enum MODE {
 }
 
 export const siteConfig = {
-  title: 'Admin Panel | The Small Cart',
-  description: `Admin Panel | The Small Cart`,
+  title: 'Admin Panel | Thribute Store',
+  description: `Admin Panel | Thribute Store`,
   logo: logoImg,
   logoWhite,
   icon: logoIconImg,
@@ -27,13 +27,13 @@ export const metaObject = (
   description: string = siteConfig.description
 ): Metadata => {
   return {
-    title: 'Admin Panel | The Small Cart',
+    title: 'Admin Panel | Thribute Store',
     description,
     openGraph: openGraph ?? {
-      title: 'Admin Panel | The Small Cart',
+      title: 'Admin Panel | Thribute Store',
       description,
       url: '',
-      siteName: 'Admin Panel | The Small Cart', // https://developers.google.com/search/docs/appearance/site-names
+      siteName: 'Admin Panel | Thribute Store', // https://developers.google.com/search/docs/appearance/site-names
       images: {
         url: '',
         width: 1200,

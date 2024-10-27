@@ -216,7 +216,7 @@ export default function CreateEditProduct1({
   return (
     <div className="@container">
       <FormNav
-        className={cn(layout === LAYOUT_OPTIONS.BERYLLIUM && '2xl:top-[72px]')}
+        className={cn(layout === LAYOUT_OPTIONS.BERYLLIUM && '2xl:top-[72px]','  mt-[-10px]')}
       />
       <FormProvider {...methods}>
         <form

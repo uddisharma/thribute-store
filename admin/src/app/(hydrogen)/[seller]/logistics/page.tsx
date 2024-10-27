@@ -104,7 +104,6 @@ function PromoBanner() {
 
   return (
     <>
-      <br />
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
 
       {loading ? (
@@ -175,7 +174,8 @@ function PromoBanner() {
                 <div className="mt-4 flex flex-col items-center gap-3 @lg:mt-0 lg:flex-row">
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto lg:w-auto dark:bg-gray-100 dark:text-white"
+                    className="w-full sm:w-auto lg:w-auto "
+                    
                     onClick={() =>
                       openModal({
                         view: <WareHouse1 data={seller} />,
@@ -187,7 +187,7 @@ function PromoBanner() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto dark:bg-gray-100 dark:text-white"
+                    className="mt-3 w-full sm:w-auto lg:mt-0 lg:w-auto "
                     onClick={() =>
                       openModal({
                         view: (
@@ -241,7 +241,7 @@ function PromoBanner() {
                 <div className="flex items-center gap-3">
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto dark:bg-gray-100 dark:text-white"
+                    className="w-full sm:w-auto "
                     onClick={() =>
                       openModal({
                         view: (

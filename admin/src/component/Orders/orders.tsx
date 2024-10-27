@@ -23,7 +23,7 @@ export default function Orders() {
     <div className="@container">
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
       <div>
-        <OrdersList className="mb-6" />
+        <OrdersList className="mb-6 mt-[-12px]" />
       </div>
     </div>
   );

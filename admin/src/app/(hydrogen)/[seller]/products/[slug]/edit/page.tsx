@@ -101,7 +101,8 @@ export default function EditProductPage({
         >
           <Button
             tag="span"
-            className="w-full @lg:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+            className="w-full @lg:w-auto "
+            variant='outline'
           >
             <PiPlusBold className="me-1.5 h-[17px] w-[17px]" />
             Add Product

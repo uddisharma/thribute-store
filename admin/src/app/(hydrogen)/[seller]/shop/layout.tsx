@@ -17,7 +17,7 @@ export default function ProfileSettingsLayout({
         name: 'Home',
       },
       {
-        href: `${params?.seller}/dashboard`,
+        href: `/${params?.seller}/dashboard`,
         name: 'Seller',
       },
       {

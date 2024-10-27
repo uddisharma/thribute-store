@@ -248,7 +248,7 @@ export const menuItems = [
   },
   {
     name: 'Profile',
-    href: '/shop',
+    href: '/shop/profile',
     icon: <FaRegUserCircle />,
     badge: '',
   },

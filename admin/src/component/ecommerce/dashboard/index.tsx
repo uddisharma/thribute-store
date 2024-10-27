@@ -149,7 +149,8 @@ export default function EcommerceDashboard() {
           <Link href={'/sellers'} className="inline-flex">
             <Button
               tag="span"
-              className="h-[38px] shadow md:h-10 dark:bg-gray-100 dark:text-gray-900"
+              className="h-[38px] shadow md:h-10 "
+              variant='outline'
             >
               <BsActivity className="me-1 h-4 w-4" /> View Sellers
             </Button>

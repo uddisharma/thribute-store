@@ -4,14 +4,14 @@ import PageHeader from '@/component/others/pageHeader';
 import OrdersTable from '@/component/ecommerce/order/order-list/table';
 import { PiXBold } from 'react-icons/pi';
 import ExportButton from '@/component/others/export-button';
-import { CiFilter } from 'react-icons/ci';
+import { CiFilter, CiSearch } from 'react-icons/ci';
 import { useModal } from '@/component/modal-views/use-modal';
 import { ActionIcon, Empty, SearchNotFoundIcon, Title } from 'rizzui';
 import dynamic from 'next/dynamic';
 import SelectLoader from '@/component/loader/select-loader';
 import { Input } from '@/component/ui/input';
 import cn from '@/utils/class-names';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFilterControls } from '@/hooks/use-filter-control';
 import Pagination from '@/component/ui/pagination';
 import axios from 'axios';
@@ -19,6 +19,7 @@ import useSWR from 'swr';
 import {
   BaseApi,
   errorRetry,
+  findSellerOrders,
   orderPerPage,
   sellerOrders,
   softOrderDelete,
@@ -72,6 +73,10 @@ const orders: any = [];
 
 export default function OrdersPage() {
   const { openModal } = useModal();
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState('');
+  const [searchData, setSearchData] = useState([]);
+  const [searching, setSearching] = useState(false);
   const initialState = {
     page: '',
     date: '',
@@ -133,40 +138,41 @@ export default function OrdersPage() {
   const newdata =
     pagininator?.itemCount > 0
       ? data?.map((e: any) => {
-          return {
-            orderId: e.order_id,
-            customer: e.customerId
-              ? `${e.customerId.name} ${e.customerId.email}`
-              : '',
-            shippingAddress: e.customerId
-              ? `${e.customerId.shippingAddress.find(
-                  (address: any) => address._id === e.addressId
-                )?.address} ${e.customerId.shippingAddress.find(
-                  (address: any) => address._id === e.addressId
-                )?.district} ${e.customerId.shippingAddress.find(
-                  (address: any) => address._id === e.addressId
-                )?.state}`
-              : '',
-            orderedProducts: e.orderItems
-              .map((item: any) => {
-                const formattedProduct = item.productId
-                  ? `name : ${item.productId.name} - qty : ${item.quantity} - color : ${item.color} - size : ${item.size}`
-                  : '';
-                return formattedProduct;
-              })
-              .join(' | '),
-            totalAmount: e.totalAmount,
-            totalItems: calculateTotalQuantity(e.orderItems),
-            shippingCost: e.shipping,
-            discount: e.discount,
-            courier: e.courior == 'Local' ? 'Local' : 'Serviceable',
-            note: e.note,
-            paymentStatus: e.payment ? 'paid' : 'Not Paid',
-            orderStatus: e.status,
-            charge: e.charge,
-          };
-        })
+        return {
+          orderId: e.order_id,
+          customer: e.customerId
+            ? `${e.customerId.name} ${e.customerId.email}`
+            : '',
+          shippingAddress: e.customerId
+            ? `${e.customerId.shippingAddress.find(
+              (address: any) => address._id === e.addressId
+            )?.address} ${e.customerId.shippingAddress.find(
+              (address: any) => address._id === e.addressId
+            )?.district} ${e.customerId.shippingAddress.find(
+              (address: any) => address._id === e.addressId
+            )?.state}`
+            : '',
+          orderedProducts: e.orderItems
+            .map((item: any) => {
+              const formattedProduct = item.productId
+                ? `name : ${item.productId.name} - qty : ${item.quantity} - color : ${item.color} - size : ${item.size}`
+                : '';
+              return formattedProduct;
+            })
+            .join(' | '),
+          totalAmount: e.totalAmount,
+          totalItems: calculateTotalQuantity(e.orderItems),
+          shippingCost: e.shipping,
+          discount: e.discount,
+          courier: e.courior == 'Local' ? 'Local' : 'Serviceable',
+          note: e.note,
+          paymentStatus: e.payment ? 'paid' : 'Not Paid',
+          orderStatus: e.status,
+          charge: e.charge,
+        };
+      })
       : [];
+
   const updateStatus = async (id: any, status: any) => {
     try {
       await axios.patch(
@@ -225,8 +231,64 @@ export default function OrdersPage() {
     }
   };
 
+  const findOrders = (e: any) => {
+    e.preventDefault();
+    setSearching(true);
+    axios.get(`${BaseApi}${findSellerOrders}/${params?.seller}?identifier=${searchRef?.current?.value}`, {
+      headers: {
+        Authorization: `Bearer ${cookies?.admintoken}`,
+      }
+    }).then((res) => {
+      if (res?.data?.status == 'SUCCESS') {
+        setSearchData(res?.data?.data?.data);
+      } else {
+        toast.error("No data found!");
+      }
+    }).catch((err) => {
+      console.log(err)
+      if (err?.response?.data?.status == 'UNAUTHORIZED') {
+        localStorage.removeItem('admin');
+        const currentUrl = window.location.href;
+        const path = extractPathAndParams(currentUrl);
+        if (typeof window !== 'undefined') {
+          location.href = `/auth/sign-in?ref=${path}`;
+        }
+        return toast.error('Session Expired');
+      } else {
+        toast.error('Something went wrong!');
+      }
+    }).finally(() => {
+      setSearching(false);
+    });
+  }
+
+  useEffect(() => {
+    const handleInputChange = () => {
+      let inputlenght = searchRef?.current?.value?.length;
+      if (searchRef?.current?.value !== undefined) {
+        if (inputlenght == 1 || inputlenght == 2) {
+          setInputValue(searchRef?.current?.value);
+        }
+      }
+      if (searchRef?.current?.value === '') {
+        setSearchData([]);
+      }
+    };
+
+    const inputElement = searchRef.current;
+    if (inputElement) {
+      inputElement.addEventListener('input', handleInputChange);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('input', handleInputChange);
+      }
+    };
+  }, []);
+
   const pageHeader = {
-    title: `Orders (${pagininator?.itemCount ?? 0})`,
+    title: `Orders (${searchData?.length > 0 ? searchData?.length : pagininator?.itemCount ? pagininator?.itemCount : 0})`,
     breadcrumb: [
       {
         href: '/',
@@ -255,33 +317,52 @@ export default function OrdersPage() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <div className="mt-4 flex items-center gap-3 @lg:mt-0">
-          <ExportButton
-            data={newdata}
-            fileName={`order_data_${date}`}
-            header=""
-          />
-          <Button
-            onClick={() =>
-              openModal({
-                view: <Filters onApplyFilter={handleApplyFilter} />,
-                customSize: '720px',
-              })
-            }
-            className="w-full gap-2 @lg:w-auto"
-            variant="outline"
-          >
-            <CiFilter className="h-4 w-4" />
-            Filters
-          </Button>
-          <Link href={`/${params?.seller}/orders/deleted`}>
-            <Button className=" w-full gap-2 @lg:w-auto" variant="outline">
-              <MdOutlineAutoDelete className="h-4 w-4" />
-              Deleted
+        {!searchData?.length &&
+          <div className="mt-4 flex items-center gap-3 @lg:mt-0">
+            <ExportButton
+              data={newdata}
+              fileName={`order_data_${date}`}
+              header=""
+            />
+            <Button
+              onClick={() =>
+                openModal({
+                  view: <Filters onApplyFilter={handleApplyFilter} />,
+                  customSize: '720px',
+                })
+              }
+              className="w-full gap-2 @lg:w-auto"
+              variant="outline"
+            >
+              <CiFilter className="h-4 w-4" />
+              Filters
             </Button>
-          </Link>
-        </div>
+            <Link href={`/${params?.seller}/orders/deleted`}>
+              <Button className=" w-full gap-2 @lg:w-auto" variant="outline">
+                <MdOutlineAutoDelete className="h-4 w-4" />
+                Deleted
+              </Button>
+            </Link>
+          </div>
+        }
       </PageHeader>
+      <form className='lg:flex items-center w-full lg:gap-3 mb-5 mt-[-15px]' onSubmit={findOrders}>
+        <Input
+          prefix={<CiSearch className="h-auto w-full" />}
+          type="text"
+          ref={searchRef}
+          placeholder="Search for Seller orders..."
+          className="mt-4 flex-grow lg:mt-0 lg:w-auto"
+        />
+        <Button
+          isLoading={searching}
+          disabled={!searchRef?.current?.value}
+          type="submit"
+          className="mt-4 w-full lg:w-auto lg:mt-0"
+        >
+          Search
+        </Button>
+      </form>
 
       {isLoading ? (
         <OrderLoading />
@@ -293,7 +374,12 @@ export default function OrdersPage() {
             className="h-full justify-center"
           />
         </div>
-      ) : data ? (
+      ) : searchData?.length > 0 ? <OrdersTable
+        key={Math.random()}
+        data={searchData}
+        updateStatus={updateStatus}
+        temperoryDelete={temperoryDelete}
+      /> : data ? (
         <OrdersTable
           key={Math.random()}
           data={data}
@@ -308,34 +394,36 @@ export default function OrdersPage() {
           temperoryDelete={temperoryDelete}
         />
       )}
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          margin: 'auto',
-          marginTop: '50px',
-          width: '100%',
-        }}
-      >
-        {pagininator && (
-          <Pagination
-            total={Number(pagininator?.itemCount)}
-            pageSize={orderPerPage}
-            defaultCurrent={page}
-            showLessItems={true}
-            prevIconClassName="py-0 text-gray-500 !leading-[26px]"
-            nextIconClassName="py-0 text-gray-500 !leading-[26px]"
-            onChange={(e) => {
-              setPage(e);
-              paginate(e);
-            }}
-          />
-        )}
-      </div>
+      {!searchData?.length &&
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            margin: 'auto',
+            marginTop: '50px',
+            width: '100%',
+          }}
+        >
+          {pagininator && (
+            <Pagination
+              total={Number(pagininator?.itemCount)}
+              pageSize={orderPerPage}
+              defaultCurrent={page}
+              showLessItems={true}
+              prevIconClassName="py-0 text-gray-500 !leading-[26px]"
+              nextIconClassName="py-0 text-gray-500 !leading-[26px]"
+              onChange={(e) => {
+                setPage(e);
+                paginate(e);
+              }}
+            />
+          )}
+        </div>
+      }
     </>
   );
 }
+
 function Filters({ onApplyFilter }: any) {
   const { closeModal } = useModal();
   const initialState = {

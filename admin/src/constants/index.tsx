@@ -130,6 +130,8 @@ export const deleteTicket = '/admin/delete/ticket';
 
 export const sellerOrders = '/admin/seller/order/list';
 
+export const findSellerOrders = '/admin/seller/orders/find';
+
 export const adminOrders = '/admin/order/list';
 
 export const orderPerPage = 2;

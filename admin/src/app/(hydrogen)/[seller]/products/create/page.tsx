@@ -30,11 +30,12 @@ export default function CreateProductPage() {
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
         <Link
           href={`/${params?.seller}/products`}
-          className="mt-4 w-full @lg:mt-0 @lg:w-auto"
+          className="mt-4  w-full @lg:mt-0 @lg:w-auto"
         >
           <Button
             tag="span"
-            className="w-full @lg:w-auto dark:bg-gray-100 dark:text-white dark:active:bg-gray-100"
+            className="w-full @lg:w-auto "
+            variant='outline'
           >
             View all Products
           </Button>
