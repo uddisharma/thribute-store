@@ -1,0 +1,20 @@
+const express = require("express");
+const router = express.Router();
+router.use("/admin/auth", require("./auth"));
+router.use(require("./userRoutes"));
+router.use(require("./productRoutes"));
+router.use(require("./orderRoutes"));
+router.use(require("./bannerRoutes"));
+router.use(require("./uploadRoutes"));
+router.use(require("./delhiveryRoutes"));
+router.use(require("./sellerRoutes"));
+router.use(require("./nimBusRoutes"));
+router.use(require("./couponRoutes"));
+router.use(require("./transactionRoutes"));
+router.use(require("./ticketsRoutes"));
+router.use(require("./sellerRequestsRoutes"));
+router.use(require("./contactRoutes"));
+router.use(require("./referralRoutes"));
+router.use(require("./uploadRoutes1"));
+
+module.exports = router;

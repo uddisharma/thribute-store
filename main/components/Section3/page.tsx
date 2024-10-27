@@ -1,0 +1,83 @@
+import React from "react";
+import Image from "next/image";
+
+const Section3 = () => {
+  return (
+    <>
+      <div className="forgot-pass md:py-5 py-5">
+        <div className="container">
+          <div className="content-main flex gap-y-8 max-md:flex-col">
+            <div className="left lg:pr-[60px] md:pr-[40px] md:border-r border-line  md:w-1/2 w-full  flex items-center">
+              <div className="text-content">
+                <div className="heading2">Enhanced Shipping & Performance</div>
+                <div className="mt-2 text-secondary">
+                  Experience our optimized platform for speed and reliability.
+                  With fast loading times and robust infrastructure, both buyers
+                  and sellers enjoy smooth and efficient interactions, ensuring
+                  a positive user experience.
+                  <ul className="list-none flex flex-col space-y-2 mt-2">
+                    <li className="flex items-center space-x-4">
+                      <span className="text-indigo-500 text-xl">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </span>
+                      <span className="text-gray-700">
+                        Enjoy fast loading times with Thribute for smooth
+                        interactions.
+                      </span>
+                    </li>
+                    <li className="flex items-center space-x-4 ">
+                      <span className="text-indigo-500 text-xl">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </span>
+                      <span className="text-gray-700">
+                        Benefit from fast shipping with 50+ courier partners for
+                        quick deliveries.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="right md:w-1/2 w-full lg:pl-[60px] md:pl-[40px] flex items-center">
+              <Image
+                src={"/image/whychooseus/2.png"}
+                alt="section2"
+                className="rounded-lg"
+                width={500}
+                height={500}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Section3;
