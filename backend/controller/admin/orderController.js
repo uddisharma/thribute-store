@@ -1,4 +1,5 @@
 const Order = require("../../model/order");
+const User = require("../../model/user");
 const orderSchemaKey = require("../../utils/validation/orderValidation");
 const validation = require("../../utils/validateRequest");
 const dbService = require("../../utils/dbService");
@@ -764,6 +765,54 @@ const findAllDeletedSellerOrder = async (req, res) => {
   }
 };
 
+const findOrders = async (req, res) => {
+  try {
+    const { identifier, page = 1, limit = 500 } = req.query;
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+
+    if (isNaN(pageNumber) || isNaN(limitNumber) || pageNumber <= 0 || limitNumber <= 0) {
+      return res.status(400).json({ error: "Invalid page or limit" });
+    }
+
+    const users = await User.find({
+      $or: [
+        { name: { $regex: identifier, $options: "i" } },
+        { email: { $regex: identifier, $options: "i" } },
+        { mobileNo: { $regex: identifier, $options: "i" } },
+      ],
+    });
+
+    if (!users || !users.length) {
+      return res.recordNotFound();
+    }
+
+    const userIds = users.map(user => user._id);
+
+    let query = { customerId: { $in: userIds }, sellerId: req.params.id };
+
+    let options = {
+      page: pageNumber,
+      limit: limitNumber,
+      populate: [
+        { path: "customerId", select: "name email phone shippingAddress" },
+        { path: "orderItems.productId", select: "name price images" }
+      ],
+    };
+
+    let foundOrders = await dbService.paginate(Order, query, options);
+
+    if (!foundOrders || !foundOrders.data || !foundOrders.data.length) {
+      return res.recordNotFound();
+    }
+    return res.success({ data: foundOrders });
+  } catch (error) {
+    console.log(error)
+    return res.internalServerError({ message: error.message });
+  }
+};
+
 module.exports = {
   findAllOrder,
   getOrder,
@@ -783,4 +832,5 @@ module.exports = {
   getYearlySellerRevenue1,
   findSellerAllOrder,
   findAllDeletedSellerOrder,
+  findOrders,
 };

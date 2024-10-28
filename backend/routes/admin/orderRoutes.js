@@ -97,4 +97,7 @@ router
     orderController.findAllDeletedSellerOrder
   );
 
+  router.route("/admin/seller/orders/find/:id")
+  .get( orderController.findOrders);
+
 module.exports = router;
